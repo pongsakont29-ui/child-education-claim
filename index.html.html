@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>คำนวณเงินสวัสดิการการศึกษาบุตร</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f6f9;--card:#fff;--ink:#14263d;--mute:#5a6b80;--line:#d3dce6;--ok:#0b6b5c;--okbg:#e2f4ef;--warn:#8a4b00;--warnbg:#fff1d9;--bad:#a12222;--badbg:#fde8e8;--btn:#14263d;--btnink:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1824;--card:#16263a;--ink:#e8eef5;--mute:#9fb0c4;--line:#2b405a;--ok:#5fd4bd;--okbg:#10372f;--warn:#ffc46b;--warnbg:#3a2a0c;--bad:#ff9a9a;--badbg:#401a1a;--btn:#e8eef5;--btnink:#14263d}}
+:root[data-theme="dark"]{--bg:#0e1824;--card:#16263a;--ink:#e8eef5;--mute:#9fb0c4;--line:#2b405a;--ok:#5fd4bd;--okbg:#10372f;--warn:#ffc46b;--warnbg:#3a2a0c;--bad:#ff9a9a;--badbg:#401a1a;--btn:#e8eef5;--btnink:#14263d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans Thai","Sarabun",system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.6rem;font-weight:800;line-height:1.3;margin:8px 0 4px}
+.sub{color:var(--mute);margin:0 0 20px}
+fieldset{border:1px solid var(--line);border-radius:10px;background:var(--card);padding:14px 16px;margin:0 0 14px}
+legend{font-weight:600;padding:0 6px}
+label{display:block;margin:10px 0 4px;font-weight:600}
+select,input[type=number]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+select:focus,input:focus,button:focus-visible{outline:3px solid var(--ok);outline-offset:1px}
+.opt{display:flex;gap:10px;align-items:flex-start;margin:8px 0;font-weight:400}
+.opt input{margin-top:6px;width:18px;height:18px;flex:none}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+.hint{font-size:.88rem;color:var(--mute);margin:4px 0 0}
+button{font:inherit;font-weight:600;background:var(--btn);color:var(--btnink);border:0;border-radius:8px;padding:12px 22px;cursor:pointer}
+#out{margin-top:18px}
+.res{border-radius:10px;padding:18px;border:1px solid var(--line);background:var(--card)}
+.big{font-size:2.4rem;font-weight:800;line-height:1.2;color:var(--ok)}
+.res.no .big{color:var(--bad)}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+td{padding:6px 0;border-bottom:1px solid var(--line)}
+td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.msg{border-radius:8px;padding:10px 12px;margin:8px 0}
+.msg.w{background:var(--warnbg);color:var(--warn)}
+.msg.b{background:var(--badbg);color:var(--bad)}
+h2{font-size:1.05rem;margin:18px 0 6px}
+ol,ul{margin:6px 0;padding-left:22px}
+.foot{font-size:.85rem;color:var(--mute);margin-top:28px;border-top:1px solid var(--line);padding-top:12px}
+[hidden]{display:none!important}
+:root{--acc:#0f766e;--hd1:#0f766e;--hd2:#2563a8;--tint:#e0f2ee;--amber:#d9480f;--btnacc:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--acc:#5fd4bd;--tint:#12332e;--amber:#ffa56b;--btnacc:#0e1824}}
+:root[data-theme="dark"]{--acc:#5fd4bd;--tint:#12332e;--amber:#ffa56b;--btnacc:#0e1824}
+.hero{background:linear-gradient(120deg,var(--hd1),var(--hd2));border-radius:14px;padding:18px 18px 16px;margin:8px 0 18px}
+.hero h1{margin:0 0 4px;color:#fff}
+.hero .sub{color:#e3f1ff;margin:0}
+fieldset{border-top:4px solid var(--acc)}
+fieldset:nth-of-type(2){border-top-color:#2563a8}
+fieldset:nth-of-type(3){border-top-color:var(--amber)}
+legend{color:var(--acc)}
+button{background:var(--acc);color:var(--btnacc);padding:12px 28px}
+.res{border-top:4px solid var(--ok)}
+.res.no{border-top-color:var(--bad)}
+.pt{display:inline-block;background:var(--tint);color:var(--acc);border-radius:999px;padding:2px 12px;font-size:.88rem;font-weight:600;margin-top:2px}
+.sm{display:block;font-size:.8rem;color:var(--mute)}
+h2{color:var(--acc)}
+</style>
+</head>
+<body>
+<main>
+<header class="hero"><h1>🎓 คำนวณเงินสวัสดิการการศึกษาบุตร</h1>
+<p class="sub">กรอกข้อมูล แล้วดูว่าเบิกได้กี่บาท พร้อมเอกสารที่ต้องเตรียม</p></header>
+
+<fieldset><legend>1. สถานศึกษาและระดับการศึกษา</legend>
+<label for="school">ประเภทสถานศึกษา</label>
+<select id="school"><option value="gov">สถานศึกษาของราชการ</option><option value="priv">สถานศึกษาของเอกชน</option></select>
+<label for="level">ระดับการศึกษา</label>
+<select id="level"></select>
+<div id="fieldBox" hidden><label for="field" id="fieldLbl">ประเภทวิชา / สายวิชา</label><select id="field"></select></div>
+<div id="subBox" hidden><label for="sub">สถานศึกษาเอกชนแห่งนี้รับเงินอุดหนุนจากรัฐหรือไม่</label>
+<select id="sub"><option value="no">ไม่รับเงินอุดหนุน</option><option value="yes">รับเงินอุดหนุน</option></select>
+<p class="hint">ตรวจได้จากหนังสือรับรองหรือประกาศของสถานศึกษา</p></div>
+</fieldset>
+
+<fieldset><legend>2. ข้อมูลบุตร</legend>
+<div class="row">
+<div><label for="order">บุตรคนที่</label><select id="order"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4 ขึ้นไป</option></select>
+<p class="hint">นับตามลำดับเกิดก่อนหลัง ไม่ว่าเกิดจากการสมรสครั้งใด</p></div>
+<div><label for="age">อายุบุตร (ปีเต็ม)</label><input type="number" id="age" min="0" max="40" value="10"></div>
+</div>
+<label class="opt"><input type="checkbox" id="adopt"> บุตรบุญธรรม หรือบุตรที่บิดามารดายกให้เป็นบุตรบุญธรรมของผู้อื่น</label>
+<label class="opt" id="firstBox" hidden><input type="checkbox" id="first" checked> เป็นหลักสูตรปริญญาตรีหลักสูตรแรกของบุตร</label>
+<label class="opt"><input type="checkbox" id="spouse" checked> คู่สมรส (ถ้ามีสิทธิ) ไม่ได้ใช้สิทธิเบิกสำหรับบุตรคนนี้ซ้ำ</label>
+</fieldset>
+
+<fieldset><legend>3. ค่าใช้จ่ายที่จ่ายจริง</legend>
+<div class="row">
+<div><label for="amt">จำนวนเงิน (บาท)</label><input type="number" id="amt" min="0" step="any" placeholder="เช่น 12000"></div>
+<div><label for="per">เป็นยอดของ</label><select id="per"><option value="t0">ต่อภาคเรียน</option><option value="y2">ทั้งปีการศึกษา (2 ภาคเรียน)</option><option value="y3">ทั้งปีการศึกษา (3 ภาคเรียน)</option><option value="t2">ต่อภาคเรียน (ปีละ 2 ภาคเรียน)</option><option value="t3">ต่อภาคเรียน (ปีละ 3 ภาคเรียน)</option></select></div>
+</div>
+<p class="hint">ใส่เฉพาะเงินบำรุงการศึกษา (โรงเรียนรัฐ) หรือค่าเล่าเรียน (โรงเรียนเอกชน) ตามที่สถานศึกษาประกาศ</p>
+</fieldset>
+
+<button id="go" type="button">คำนวณ</button>
+<div id="out" aria-live="polite"></div>
+
+<p class="foot">ที่มาของอัตรา: เอกสารเผยแพร่ กองคลัง กรมส่งเสริมการเกษตร (สิงหาคม 2564) สรุปอัตราของกรมบัญชีกลาง เครื่องมือนี้เป็นการประมาณการเบื้องต้น ก่อนยื่นเบิกจริงควรตรวจกับหนังสือเวียนฉบับล่าสุดและเจ้าหน้าที่การเงินของหน่วยงาน</p>
+</main>
+
+<script>
+var FIELDS=[["คหกรรม / คหกรรมศาสตร์",16500,3400],["พาณิชยกรรม / บริหารธุรกิจ",19900,5100],["ศิลปหัตถกรรม / ศิลปกรรม",20000,3600],["เกษตรกรรม / เกษตรศาสตร์",21000,5000],["ช่างอุตสาหกรรม / อุตสาหกรรม",24400,7200],["ประมง",21100,5000],["อุตสาหกรรมการท่องเที่ยว",19900,5100],["อุตสาหกรรมสิ่งทอ",24400,7200]];
+var HIGHER=[["ช่างอุตสาหกรรม / อุตสาหกรรม / เทคโนโลยีสารสนเทศและการสื่อสาร / ทัศนศาสตร์",30000],["พาณิชยกรรม / บริหารธุรกิจ / ศิลปหัตถกรรม / ศิลปกรรม / เกษตรกรรม / เกษตรศาสตร์ / คหกรรม / คหกรรมศาสตร์ / อุตสาหกรรมการท่องเที่ยว",25000]];
+var GOV={kg:5800,pri:4000,m13:4800,m46:4800,dip:13700,deg:25000};
+var PRIV={kg:[13600,4800],pri:[13200,4200],m13:[15800,3300],m46:[16200,3200]};
+var LV={gov:[["kg","อนุบาล"],["pri","ประถมศึกษา"],["m13","มัธยมศึกษาตอนต้น"],["m46","มัธยมศึกษาตอนปลาย / ปวช."],["dip","อนุปริญญา"],["deg","ปริญญาตรี"]],
+priv:[["kg","อนุบาล"],["pri","ประถมศึกษา"],["m13","มัธยมศึกษาตอนต้น"],["m46","มัธยมศึกษาตอนปลาย"],["vc","ปวช."],["hvc","ปวส. / ปวท."],["deg","ปริญญาตรี"]]};
+var $=function(i){return document.getElementById(i)};
+var fmt=function(n){return n.toLocaleString("th-TH",{maximumFractionDigits:2})};
+
+function fillLevels(){var s=$("school").value;$("level").innerHTML=LV[s].map(function(l){return '<option value="'+l[0]+'">'+l[1]+'</option>'}).join("");sync()}
+function sync(){
+ var s=$("school").value,l=$("level").value,f=$("field");
+ var showF=s==="priv"&&(l==="vc"||l==="hvc");
+ $("fieldBox").hidden=!showF;
+ if(l==="vc")f.innerHTML=FIELDS.map(function(x,i){return '<option value="'+i+'">'+x[0]+'</option>'}).join("");
+ if(l==="hvc")f.innerHTML=HIGHER.map(function(x,i){return '<option value="'+i+'">'+x[0]+'</option>'}).join("");
+ $("subBox").hidden=!(s==="priv"&&(l==="kg"||l==="pri"||l==="m13"||l==="m46"||l==="vc"));
+ $("firstBox").hidden=l!=="deg";
+}
+function rule(){
+ var s=$("school").value,l=$("level").value,sub=$("sub").value==="yes"?1:0;
+ if(s==="gov")return {cap:GOV[l],half:false,basis:"เงินบำรุงการศึกษา สถานศึกษาของราชการ เพดานปีการศึกษาละ"};
+ if(PRIV[l])return {cap:PRIV[l][sub],half:false,basis:"ค่าเล่าเรียน สถานศึกษาเอกชน"+(sub?" (รับเงินอุดหนุน)":" (ไม่รับเงินอุดหนุน)")+" เพดานปีการศึกษาละ"};
+ if(l==="vc"){var f=FIELDS[+$("field").value];return {cap:f[sub?2:1],half:false,basis:"ค่าเล่าเรียน ปวช. สาย"+f[0]+(sub?" (รับเงินอุดหนุน)":" (ไม่รับเงินอุดหนุน)")+" เพดานปีการศึกษาละ"}}
+ if(l==="hvc"){var h=HIGHER[+$("field").value];return {cap:h[1],half:true,basis:"ครึ่งหนึ่งของที่จ่ายจริง ปวส./ปวท. เพดานปีการศึกษาละ"}}
+ return {cap:25000,half:true,basis:"ครึ่งหนึ่งของที่จ่ายจริง ปริญญาตรี เพดานปีการศึกษาละ"};
+}
+function calc(){
+ var out=$("out"),bad=[],warn=[];
+ var amt=parseFloat($("amt").value),per=$("per").value.charAt(0),T=+$("per").value.charAt(1)||2,age=parseFloat($("age").value);
+ if(!(amt>=0)||$("amt").value===""){out.innerHTML='<div class="msg b">กรอกจำนวนเงินที่จ่ายจริงก่อน แล้วกด “คำนวณ”</div>';return}
+ if(+$("order").value>3)bad.push("สิทธิเบิกได้เฉพาะบุตรคนที่ 1 ถึง 3 เท่านั้น");
+ if(isNaN(age)||age<3||age>25)bad.push("บุตรต้องมีอายุครบ 3 ปี แต่ไม่เกิน 25 ปี");
+ if($("adopt").checked)bad.push("ไม่รวมบุตรบุญธรรม และบุตรที่บิดามารดายกให้เป็นบุตรบุญธรรมของผู้อื่น");
+ if(!$("spouse").checked)bad.push("หากคู่สมรสมีสิทธิทั้งสองฝ่าย ต้องให้ฝ่ายใดฝ่ายหนึ่งใช้สิทธิเบิกสำหรับบุตรทุกคนเพียงฝ่ายเดียว");
+ if($("level").value==="deg"&&!$("first").checked)bad.push("ปริญญาตรีเบิกได้เฉพาะหลักสูตรแรกเท่านั้น");
+ var r=rule(),annual=per==="t"?amt*T:amt,basisAmt=r.half?annual/2:annual,ok=Math.min(basisAmt,r.cap),h="";
+ if(bad.length)ok=0;
+ if($("per").value==="t0")warn.push("ไม่ได้ระบุจำนวนภาคเรียน ระบบสมมติว่าปีการศึกษามี 2 ภาคเรียน ถ้ามี 3 ภาคเรียนให้เลือกตัวเลือกที่ระบุจำนวนภาค");if(per==="t")warn.push("เพดานเป็นยอดต่อปีการศึกษา ระบบนำยอดต่อภาคเรียนคูณจำนวนภาคเรียนเพื่อเทียบกับเพดาน");
+ if($("school").value==="gov"&&$("level").value==="dip")warn.push("กรณี ปวส. ของสถานศึกษารัฐ เอกสารต้นทางระบุเพียง “อนุปริญญา” ควรตรวจกับเจ้าหน้าที่การเงินว่าใช้อัตรานี้หรือไม่");
+ h+='<div class="res'+(bad.length?' no':'')+'"><div>'+(bad.length?'เบิกไม่ได้':'เบิกได้ประมาณ')+'</div><div class="big">'+fmt(ok)+' บาท</div>'+(ok>0?'<div class="pt">เบิกได้ '+fmt(ok/T)+' บาท/เทอม (ปีละ '+T+' เทอม)</div>':'');
+ h+='<table><tr><td>ยอดที่จ่ายจริง (ปีการศึกษา)</td><td>'+fmt(annual)+'</td></tr>';
+ if(r.half)h+='<tr><td>ครึ่งหนึ่งของที่จ่ายจริง</td><td>'+fmt(basisAmt)+'</td></tr>';
+ h+='<tr><td>'+r.basis+'</td><td>'+fmt(r.cap)+'</td></tr>';
+ if(!bad.length)h+='<tr><td>ส่วนที่เบิกไม่ได้</td><td>'+fmt(Math.max(0,annual-ok))+'</td></tr>';
+ h+='</table>';
+ bad.forEach(function(b){h+='<div class="msg b">'+b+'</div>'});
+ warn.forEach(function(w){h+='<div class="msg w">'+w+'</div>'});
+ if(!bad.length&&basisAmt>r.cap)h+='<div class="msg w">ยอดเกินเพดาน ส่วนที่เกินเบิกไม่ได้</div>';
+ h+='</div>';
+ if(!bad.length){h+='<h2>เอกสารที่ต้องเตรียม</h2><ul><li>ใบเบิกเงินสวัสดิการเกี่ยวกับการศึกษาของบุตร (แบบ 7223)</li><li>ใบเสร็จรับเงินของสถานศึกษา</li><li>ใบแจ้งการชำระเงิน (กรณีชำระผ่านธนาคาร)</li><li>หนังสือรับรองหรือประกาศของสถานศึกษาที่กำหนดค่าบำรุงการศึกษา/ค่าเล่าเรียน</li></ul>';
+ h+='<h2>ขั้นตอน</h2><ol><li>ชำระค่าเล่าเรียนหรือเงินบำรุงการศึกษา และเก็บใบเสร็จ</li><li>กรอกแบบ 7223 พร้อมรับรองว่าเป็นผู้ใช้สิทธิเพียงฝ่ายเดียว</li><li>แนบเอกสารตามรายการ แล้วยื่นต่อเจ้าหน้าที่การเงินของหน่วยงาน</li></ol>'}
+ out.innerHTML=h;out.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+$("school").addEventListener("change",fillLevels);
+$("level").addEventListener("change",sync);
+$("go").addEventListener("click",calc);
+fillLevels();
+</script>
+</body>
+</html>
